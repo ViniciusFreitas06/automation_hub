@@ -45,3 +45,34 @@ if st.button("Executar"):
             )
     else:
         st.error(f"Erro: {response.text}")
+
+
+st.markdown("---")
+st.subheader("3. Adicionar um script")
+
+st.write("Envie um novo script para a pasta de scripts")
+new_script = st.file_uploader("Escolha um script para adicionar", type=["py"])
+
+if st.button("Enviar"):
+    if new_script is None:
+        st.warning("Envie um script primeiro")
+        st.stop()
+
+    with st.spinner("Enviando script..."):
+        files = {
+            "file": (
+                new_script.name,
+                new_script.read(),
+                new_script.type
+            )
+        }
+
+        response = requests.post(
+            "http://127.0.0.1:8000/scripts/upload",
+            files=files
+        )
+
+    if response.status_code == 200:
+        st.success("Script enviado com sucesso!")
+    else:
+        st.error(f"Erro: {response.text}")

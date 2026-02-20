@@ -1,5 +1,5 @@
-from fastapi import APIRouter
-from fastapi import APIRouter
+from fastapi import APIRouter, UploadFile, File, HTTPException
+import shutil
 from pathlib import Path
 
 router = APIRouter(prefix="/scripts", tags=["Scripts"])
@@ -16,3 +16,24 @@ def list_scripts():
             scripts.append(file.stem)
 
     return scripts
+
+@router.post("/upload")
+async def upload_script(file: UploadFile = File(...)):
+
+    if not file.filename.endswith(".py"):
+        raise HTTPException(status_code=400, detail="Somente arquivos .py são permitidos")
+
+    script_path = SCRIPTS_DIR / file.filename
+
+    
+    if script_path.exists():
+        raise HTTPException(status_code=409, detail="Script já existe")
+
+
+    with open(script_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    return {
+        "status": "ok",
+        "script": file.filename
+    }
