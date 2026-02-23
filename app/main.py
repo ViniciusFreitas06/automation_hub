@@ -1,7 +1,9 @@
 from fastapi import FastAPI
-from app.routes import scripts, runner, download
+from app.routes import scripts, runner, download, admin
 from app.db.session import create_db_and_tables
 from app.auth.router import router as auth_router
+
+
 
 app = FastAPI(
     title="Automation Hub",
@@ -13,7 +15,7 @@ app.include_router(scripts.router)
 app.include_router(runner.router)
 app.include_router(download.router)
 app.include_router(auth_router, prefix="/auth", tags=["Auth"])
-
+app.include_router(admin.router)
 
 @app.get("/")
 def health_check():

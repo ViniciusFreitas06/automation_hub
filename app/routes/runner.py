@@ -1,8 +1,9 @@
-from fastapi import APIRouter, UploadFile, File, Form, HTTPException
+from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException
 from pathlib import Path
 import shutil
 import time
 
+from app.core.permissions import require_user
 from app.services.executor import execute
 from app.services.logger import log_execution
 
@@ -16,7 +17,7 @@ OUTPUT_DIR.mkdir(exist_ok=True)
 
 
 @router.post("/")
-async def run_script(file: UploadFile = File(...), script_name: str = Form(...)):
+async def run_script(file: UploadFile = File(...), script_name: str = Form(...), user = Depends(require_user)):
     input_path = UPLOAD_DIR / file.filename
     output_path = OUTPUT_DIR / f"resultado_{file.filename}"
 
