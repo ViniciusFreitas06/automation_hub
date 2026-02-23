@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from app.routes import scripts, runner, download, admin
 from app.db.session import create_db_and_tables
 from app.auth.router import router as auth_router
-
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI(
@@ -11,6 +11,13 @@ app = FastAPI(
     version="1.0.0",
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.include_router(scripts.router)
 app.include_router(runner.router)
 app.include_router(download.router)
