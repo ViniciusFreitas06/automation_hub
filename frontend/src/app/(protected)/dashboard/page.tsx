@@ -1,20 +1,37 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { getDashboardMetrics } from '@/services/dashboard'
+
 export default function DashboardPage() {
+  const [metrics, setMetrics] = useState<{ total_scripts: number } | null>(null)
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const data = await getDashboardMetrics()
+        console.log('DATA:', data)
+        setMetrics(data)
+      } catch (error) {
+        console.error('ERRO:', error)
+      }
+    }
+
+    load()
+  }, [])
+
   return (
-    <div className="grid gap-6 md:grid-cols-3">
-      <div className="bg-white rounded-lg shadow-sm p-5">
-        <p className="text-sm text-slate-500">Total de Scripts</p>
-        <p className="text-2xl font-bold mt-1">12</p>
-      </div>
+    <div className="p-6">
+      <h1 className="text-2xl font-semibold">Dashboard</h1>
 
-      <div className="bg-white rounded-lg shadow-sm p-5">
-        <p className="text-sm text-slate-500">Execuções Hoje</p>
-        <p className="text-2xl font-bold mt-1">34</p>
-      </div>
-
-      <div className="bg-white rounded-lg shadow-sm p-5">
-        <p className="text-sm text-slate-500">Usuários</p>
-        <p className="text-2xl font-bold mt-1">8</p>
+      <div className="mt-6">
+        <div className="bg-white rounded-xl shadow p-6 w-64">
+          <span className="text-gray-500 text-sm">Total de Scripts</span>
+          <p className="text-3xl font-bold">
+            {metrics ? metrics.total_scripts : '...'}
+          </p>
+        </div>
       </div>
     </div>
-  );
+  )
 }
