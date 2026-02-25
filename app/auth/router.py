@@ -36,11 +36,7 @@ def login(
 
     return {"access_token": token, "token_type": "bearer"}
 
+
 @router.get("/me")
-def me(user = Depends(get_current_user)):
-    return {
-        "id": user.id,
-        "name": user.name,
-        "email": user.email,
-        "role": user.role
-    }
+def me(user=Depends(get_current_user)):
+    return {"id": user.id, "name": user.name, "email": user.email, "role": user.role}

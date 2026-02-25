@@ -2,8 +2,7 @@ from fastapi import APIRouter, Depends, Form, UploadFile, File, HTTPException
 import shutil
 import os
 from pathlib import Path
-
-from sqlmodel import Session
+from sqlmodel import Session, select
 from app.auth.security import get_current_user
 from app.core.permissions import require_dev, require_user
 from app.db.session import get_session
@@ -15,14 +14,10 @@ SCRIPTS_DIR = Path("scripts")
 
 
 @router.get("/")
-def list_scripts(user = Depends(require_user)):
-    scripts = []
-
-    for file in SCRIPTS_DIR.glob("*.py"):
-        if file.name != "__init__.py":
-            scripts.append(file.stem)
-
+def list_scripts(db: Session = Depends(get_session)):
+    scripts = db.exec(select(Script)).all()
     return scripts
+
 
 @router.post("/upload")
 async def upload_script(
@@ -30,11 +25,13 @@ async def upload_script(
     description: str = Form(None),
     file: UploadFile = File(...),
     db: Session = Depends(get_session),
-    user=Depends(require_dev)
+    user=Depends(require_dev),
 ):
 
     if not file.filename.endswith(".py"):
-        raise HTTPException(status_code=400, detail="Somente arquivos .py são permitidos")
+        raise HTTPException(
+            status_code=400, detail="Somente arquivos .py são permitidos"
+        )
 
     script_path = SCRIPTS_DIR / file.filename
 
@@ -55,24 +52,33 @@ async def upload_script(
     db.commit()
     db.refresh(script)
 
-    return {
-        "status": "ok",
-        "script": script
-    }
+    return {"status": "ok", "script": script}
 
-@router.delete("/{script_name}")
-def delete_script(script_name: str, user = Depends(require_dev)):
-    script_path = SCRIPTS_DIR / f"{script_name}.py"
 
-    if not script_name.isidentifier():
-        raise HTTPException(status_code=400, detail="Nome de script inválido")
+@router.delete("/{script_id}")
+def delete_script(
+    script_id: int, db: Session = Depends(get_session), user=Depends(require_dev)
+):
+    script = db.get(Script, script_id)
 
-    if not script_path.exists():
+    if not script:
         raise HTTPException(status_code=404, detail="Script não encontrado")
 
-    os.remove(script_path)
+    script_path = SCRIPTS_DIR / script.filename
 
-    return {
-        "status": "ok",
-        "message": f"Script '{script_name}' deletado com sucesso"
-    }
+    if script_path.exists():
+        os.remove(script_path)
+
+    db.delete(script)
+    db.commit()
+
+    return {"status": "ok"}
+
+
+@router.get("/{script_id}")
+def get_script_by_id(script_id: int, db: Session = Depends(get_session)):
+    script = db.get(Script, script_id)
+    if not script:
+        raise HTTPException(status_code=404, detail="Script não encontrado")
+
+    return script

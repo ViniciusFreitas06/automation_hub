@@ -1,12 +1,13 @@
 fastapi
 uvicorn[standard]
 python-multipart
-streamlit
 requests
 pandas
 openpyxl
 numpy
 sqlmodel 
-passlib[bcrypt] bcrypt==4.0.1
+passlib[bcrypt]
+bcrypt==4.0.1
 python-jose[cryptography]
 pydantic[email]
+python-dotenv

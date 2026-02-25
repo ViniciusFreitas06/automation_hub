@@ -9,12 +9,12 @@ router = APIRouter(prefix="/admin", tags=["Admin"])
 
 @router.put("/users/{user_id}/role")
 def change_user_role(
-    user_id: int,
+    user_email: str,
     role: str,
     db: Session = Depends(get_session),
-    admin = Depends(require_admin),
+    admin=Depends(require_admin),
 ):
-    user = db.exec(select(User).where(User.id == user_id)).first()
+    user = db.exec(select(User).where(User.email == user_email)).first()
 
     if not user:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
@@ -27,8 +27,4 @@ def change_user_role(
     db.commit()
     db.refresh(user)
 
-    return {
-        "status": "ok",
-        "user_id": user.id,
-        "new_role": user.role
-    }
+    return {"status": "ok", "user_id": user.id, "new_role": user.role}
