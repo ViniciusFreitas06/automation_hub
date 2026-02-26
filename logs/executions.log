@@ -1,0 +1,9 @@
+2026-02-26 13:36:59 | dados.py | requirements.txt | ERROR | 0.00s
+2026-02-26 14:56:20 | adiciona_coluna.py | teste.csv | ERROR | 4.61s
+2026-02-26 14:57:48 | adiciona_coluna.py | teste.csv | ERROR | 0.00s
+2026-02-26 14:59:24 | adiciona_coluna.py | teste.csv | ERROR | 0.34s
+2026-02-26 15:03:06 | adiciona_coluna.py | teste.csv | ERROR | 0.44s
+2026-02-26 15:03:53 | adiociona_coluna | teste.csv | ERROR | 0.00s
+2026-02-26 15:04:26 | adiciona_coluna | teste.csv | SUCCESS | 0.01s
+2026-02-26 15:04:59 | adiciona_coluna.py | teste.csv | ERROR | 0.00s
+2026-02-26 15:07:09 | adiciona_coluna | teste.csv | SUCCESS | 0.01s

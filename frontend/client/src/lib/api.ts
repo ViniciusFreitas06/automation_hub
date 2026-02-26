@@ -15,6 +15,15 @@ export const apiConfig = {
       upload: `${API_BASE_URL}/scripts/upload`,
       delete: (id: number) => `${API_BASE_URL}/scripts/${id}`,
     },
+
+    runner: {
+      run: `${API_BASE_URL}/runner`,
+    },
+
+    auth: {
+      login: `${API_BASE_URL}/auth/auth/login`,
+      me: `${API_BASE_URL}/auth/auth/me`,
+    },
   },
 };
 
