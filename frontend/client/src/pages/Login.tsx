@@ -33,7 +33,7 @@ export default function Login() {
       });
 
 
-        setToken(response.data.access_token);
+      setToken(response.data.access_token);
 
 
       toast.success("Login realizado com sucesso");
@@ -88,9 +88,6 @@ export default function Login() {
           </Button>
         </form>
 
-        <div className="mt-6 text-center text-xs text-muted-foreground">
-          Sistema interno • Sylvamo
-        </div>
       </Card>
     </div>
   );
