@@ -5,4 +5,4 @@ venv/
 database.db
 .env
 *.db
-banco.py
+*scripts/
