@@ -17,7 +17,11 @@ OUTPUT_DIR.mkdir(exist_ok=True)
 
 
 @router.post("/")
-async def run_script(file: UploadFile = File(...), script_name: str = Form(...), user = Depends(require_user)):
+async def run_script(
+    file: UploadFile = File(...),
+    script_name: str = Form(...),
+    user = Depends(require_user),
+):
     input_path = UPLOAD_DIR / file.filename
     output_path = OUTPUT_DIR / f"resultado_{file.filename}"
 
@@ -32,9 +36,11 @@ async def run_script(file: UploadFile = File(...), script_name: str = Form(...),
         duration = time.time() - start_time
         log_execution(script_name, file.filename, "SUCCESS", duration)
 
+        input_path.unlink(missing_ok=True)
+        
         return {
             "status": "ok",
-            "output_file": str(output_path),
+            "filename": output_path.name,
             "duration": f"{duration:.2f}s",
         }
 
