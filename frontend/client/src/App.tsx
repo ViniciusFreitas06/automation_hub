@@ -8,12 +8,26 @@ import Scripts from "./pages/Scripts";
 import Login from "./pages/Login";
 import ProtectedRoute from "./contexts/ProtectedRoute";
 import ScriptAdmin from "./pages/ScriptsAdmin";
+import AdminRoute from "./contexts/AdminRoute";
+import AdminUsers from "./pages/AdminUsers";
 
 function Router() {
   return (
     <Switch>
       <Route path="/login" component={Login} />
-      <Route path="/dev/scripts" component={ScriptAdmin} />
+
+      <Route path="/dev/scripts">
+        <ProtectedRoute>
+          <ScriptAdmin />
+        </ProtectedRoute>
+      </Route>
+
+      <Route path="/admin/users">
+        <AdminRoute>
+          <AdminUsers />
+        </AdminRoute>
+      </Route>
+
       <Route path="/">
         <ProtectedRoute>
           <Scripts />
@@ -22,11 +36,9 @@ function Router() {
 
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
-
     </Switch>
   );
 }
-
 function App() {
   return (
     <ErrorBoundary>

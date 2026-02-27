@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routes import scripts, runner, download, admin, dashboard
+from app.routes import scripts, runner, download, admin
 from app.db.session import create_db_and_tables
 from app.auth.router import router as auth_router
 from fastapi.middleware.cors import CORSMiddleware
@@ -23,7 +23,6 @@ app.include_router(runner.router)
 app.include_router(download.router)
 app.include_router(auth_router)
 app.include_router(admin.router)
-app.include_router(dashboard.router)
 
 
 @app.get("/")

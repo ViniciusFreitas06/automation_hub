@@ -25,6 +25,8 @@ export default function Scripts() {
   const [error, setError] = useState<string | null>(null);
   const [runningId, setRunningId] = useState<number | null>(null);
   const [, setLocation] = useLocation();
+  const [isDev, setIsDev] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // Busca scripts
   useEffect(() => {
@@ -44,6 +46,25 @@ export default function Scripts() {
     };
 
     fetchScripts();
+  }, []);
+
+  useEffect(() => {
+    const fetchMe = async () => {
+      try {
+        const res = await api.get(apiConfig.endpoints.auth.me);
+
+        const role = res.data.role;
+
+        setIsDev(role === "dev" || role == "admin");
+        setIsAdmin(role === "admin");
+
+      } catch {
+        setIsDev(false);
+        setIsAdmin(false);
+      }
+    };
+
+    fetchMe();
   }, []);
 
   // Rodar script
@@ -110,9 +131,18 @@ export default function Scripts() {
           <button className="w-full text-left px-3 py-2 rounded text-sm font-medium text-primary bg-primary/5 border-l-2 border-primary">
             Todos os Scripts
           </button>
-          <button onClick={() => setLocation("/dev/scripts")} className="w-full text-left px-3 py-2 rounded text-sm font-medium text-primary bg-primary/5 border-l-2 border-primary">
-            Área DEV
-          </button>
+          {isDev && (
+            <button onClick={() => setLocation("/dev/scripts")} className="w-full text-left px-3 py-2 rounded text-sm font-medium text-primary bg-primary/5 border-l-2 border-primary">
+              Área DEV
+            </button>
+          )}
+
+          {isAdmin && (
+            <button onClick={() => setLocation("/admin/users")} className="w-full text-left px-3 py-2 rounded text-sm font-medium text-primary bg-primary/5 border-l-2 border-primary">
+              Área Admin
+            </button>
+          )}
+
         </nav>
 
 

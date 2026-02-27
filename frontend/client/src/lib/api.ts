@@ -23,7 +23,14 @@ export const apiConfig = {
     auth: {
       login: `${API_BASE_URL}/auth/login`,
       me: `${API_BASE_URL}/auth/me`,
-    }
+    },
+
+    admin: {
+      listUsers: `${API_BASE_URL}/admin/users`,
+      changeRole: (id: number) =>
+        `${API_BASE_URL}/admin/users/${id}/role`,
+    },
+
   },
 };
 
