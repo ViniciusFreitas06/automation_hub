@@ -4,7 +4,7 @@
  */
 
 // URL base da API FastAPI
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export const apiConfig = {
   baseURL: API_BASE_URL,
@@ -21,10 +21,10 @@ export const apiConfig = {
     },
 
     auth: {
-      login: `${API_BASE_URL}/auth/auth/login`,
-      me: `${API_BASE_URL}/auth/auth/me`,
-    },
+      login: `${API_BASE_URL}/auth/login`,
+      me: `${API_BASE_URL}/auth/me`,
+    }
   },
 };
 
-export default apiConfig;
+export default apiConfig; 

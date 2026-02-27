@@ -3,9 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { X, Code2, User, Calendar, FileText, Play } from "lucide-react";
 import { toast } from "sonner";
-import api from "@/lib/axios"; 
+import api from "@/lib/axios";
 import { apiConfig } from "@/lib/api";
 import axios from "@/lib/axios";
+import { useLocation } from "wouter";
+import ScriptsAdmin from "@/pages/ScriptsAdmin";
 
 interface Script {
   id: number;
@@ -22,6 +24,7 @@ export default function Scripts() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [runningId, setRunningId] = useState<number | null>(null);
+  const [, setLocation] = useLocation();
 
   // Busca scripts
   useEffect(() => {
@@ -44,52 +47,52 @@ export default function Scripts() {
   }, []);
 
   // Rodar script
- const runScript = async (script: Script, file: File) => {
-  try {
-    setRunningId(script.id);
+  const runScript = async (script: Script, file: File) => {
+    try {
+      setRunningId(script.id);
 
-    const formData = new FormData();
-    formData.append("file", file);
+      const formData = new FormData();
+      formData.append("file", file);
 
-    const scriptName = script.filename.replace(/\.py$/, "");
-    formData.append("script_name", scriptName);
+      const scriptName = script.filename.replace(/\.py$/, "");
+      formData.append("script_name", scriptName);
 
-    const token = localStorage.getItem("access_token");
+      const token = localStorage.getItem("access_token");
 
-    const response = await axios.post(
-      apiConfig.endpoints.runner.run,
-      formData,
-      {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
-      }
-    );
+      const response = await axios.post(
+        apiConfig.endpoints.runner.run,
+        formData,
+        {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          },
+        }
+      );
 
-    const filename = response.data.filename;
+      const filename = response.data.filename;
 
-    const downloadUrl = `${apiConfig.baseURL}/download/${filename}`;
+      const downloadUrl = `${apiConfig.baseURL}/download/${filename}`;
 
-    const link = document.createElement("a");
-    link.href = downloadUrl;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
 
-    toast.success(
-      `Script executado com sucesso (${response.data.duration})`
-    );
+      toast.success(
+        `Script executado com sucesso (${response.data.duration})`
+      );
 
-  } catch (err: any) {
-    console.error(err);
-    toast.error(
-      err?.response?.data?.detail || "Erro ao executar script"
-    );
-  } finally {
-    setRunningId(null);
-  }
-};
+    } catch (err: any) {
+      console.error(err);
+      toast.error(
+        err?.response?.data?.detail || "Erro ao executar script"
+      );
+    } finally {
+      setRunningId(null);
+    }
+  };
 
   return (
     <div className="flex h-screen bg-background text-foreground">
@@ -103,11 +106,15 @@ export default function Scripts() {
           <p className="text-xs text-muted-foreground">Automation Hub</p>
         </div>
 
-        <nav className="flex-1 p-4">
+        <nav className="flex-1 p-4 space-y-5">
           <button className="w-full text-left px-3 py-2 rounded text-sm font-medium text-primary bg-primary/5 border-l-2 border-primary">
             Todos os Scripts
           </button>
+          <button onClick={() => setLocation("/dev/scripts")} className="w-full text-left px-3 py-2 rounded text-sm font-medium text-primary bg-primary/5 border-l-2 border-primary">
+            Área DEV
+          </button>
         </nav>
+
 
         <div className="p-4 border-t border-border text-xs text-muted-foreground">
           Total: {scripts.length} scripts

@@ -7,12 +7,13 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Scripts from "./pages/Scripts";
 import Login from "./pages/Login";
 import ProtectedRoute from "./contexts/ProtectedRoute";
+import ScriptAdmin from "./pages/ScriptsAdmin";
 
 function Router() {
   return (
     <Switch>
       <Route path="/login" component={Login} />
-
+      <Route path="/dev/scripts" component={ScriptAdmin} />
       <Route path="/">
         <ProtectedRoute>
           <Scripts />
@@ -21,6 +22,7 @@ function Router() {
 
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
+
     </Switch>
   );
 }
