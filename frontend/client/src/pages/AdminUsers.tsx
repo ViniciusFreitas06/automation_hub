@@ -11,7 +11,7 @@ import {
 import { toast } from "sonner";
 import api from "@/lib/axios";
 import { apiConfig } from "@/lib/api";
-import { ArrowLeft, Users } from "lucide-react";
+import { ArrowLeft, Users, Trash2 } from "lucide-react";
 import { useLocation } from "wouter";
 
 interface User {
@@ -39,11 +39,11 @@ export default function AdminUsers() {
     fetchUsers();
   }, []);
 
-  const updateRole = async (email: string, role: string) => {
+  const updateRole = async (id: number, role: string) => {
     try {
       setLoading(true);
 
-      await api.put(apiConfig.endpoints.admin.changeRole(email), null, {
+      await api.put(apiConfig.endpoints.admin.changeRole(id), null, {
         params: { role },
       });
 
@@ -56,9 +56,20 @@ export default function AdminUsers() {
     }
   };
 
+  const handleDelete = async (id: number) => {
+    if (!confirm("Tem certeza que deseja excluir este usuário?")) return;
+
+    try {
+      await api.delete(apiConfig.endpoints.admin.deleteUser(id));
+      toast.success("Usuário removido");
+      fetchUsers();
+    } catch (err: any) {
+      toast.error(err?.response?.data?.detail || "Erro ao excluir usuário");
+    }
+  };
+
   return (
     <div className="min-h-screen p-8 bg-background space-y-8">
-
       {/* Header */}
       <div className="flex items-center justify-between max-w-5xl">
         <div className="flex items-center gap-2">
@@ -90,7 +101,7 @@ export default function AdminUsers() {
                 <th className="text-left p-2">Nome</th>
                 <th className="text-left p-2">Email</th>
                 <th className="text-left p-2">Permissão</th>
-                <th className="text-center p-2">Ação</th>
+                <th className="text-center p-2">Ações</th>
               </tr>
             </thead>
 
@@ -129,16 +140,24 @@ export default function AdminUsers() {
                       </Select>
                     </td>
 
-                    <td className="p-2 text-center">
-                      <Button
-                        size="sm"
-                        onClick={() =>
-                          updateRole(user.email, user.role)
-                        }
-                        disabled={loading}
-                      >
-                        Salvar
-                      </Button>
+                    <td className="p-2">
+                        <div className="flex items-center justify-center gap-2">
+                            <Button
+                            size="sm"
+                            onClick={() => updateRole(user.id, user.role)}
+                            disabled={loading}
+                            >
+                            Salvar
+                            </Button>
+
+                            <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => handleDelete(user.id)}
+                            >
+                            <Trash2 className="w-4 h-4" />
+                            </Button>
+                        </div>
                     </td>
                   </tr>
                 ))}

@@ -10,12 +10,13 @@ import ProtectedRoute from "./contexts/ProtectedRoute";
 import ScriptAdmin from "./pages/ScriptsAdmin";
 import AdminRoute from "./contexts/AdminRoute";
 import AdminUsers from "./pages/AdminUsers";
+import Register from "./pages/Register";
 
 function Router() {
   return (
     <Switch>
       <Route path="/login" component={Login} />
-
+      <Route path="/register" component={Register} />
       <Route path="/dev/scripts">
         <ProtectedRoute>
           <ScriptAdmin />

@@ -32,12 +32,9 @@ export default function Login() {
         password,
       });
 
-
       setToken(response.data.access_token);
 
-
       toast.success("Login realizado com sucesso");
-
       setLocation("/");
     } catch (err: any) {
       toast.error(
@@ -88,6 +85,18 @@ export default function Login() {
           </Button>
         </form>
 
+        {/* Botão para registro */}
+        <div className="mt-6 text-center">
+
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={() => setLocation("/register")}
+          >
+            Criar conta
+          </Button>
+        </div>
       </Card>
     </div>
   );

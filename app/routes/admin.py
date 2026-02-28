@@ -37,3 +37,19 @@ def list_users(
 ):
     users = db.exec(select(User)).all()
     return users
+
+@router.delete("/users/{user_id}")
+def delete_user(
+    user_id: int,
+    db: Session = Depends(get_session),
+    admin=Depends(require_admin),
+):
+    user = db.get(User, user_id)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+
+    db.delete(user)
+    db.commit()
+
+    return {"status": "ok", "deleted_id": user_id}
