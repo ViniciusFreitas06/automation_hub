@@ -6,3 +6,5 @@ database.db
 .env
 *.db
 /scripts/
+banco.py
+/logs/
