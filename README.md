@@ -71,7 +71,6 @@ Boas práticas aplicadas:
 -   React + TypeScript
 -   Axios
 -   Wouter
--   Shadcn/UI
 -   TailwindCSS
 
 Comunicação via API REST protegida por token JWT.
